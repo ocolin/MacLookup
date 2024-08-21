@@ -1,0 +1,21 @@
+OUI/MA-L                                                    Organization
+company_id                                                  Organization
+                                                            Address
+
+28-6F-B9   (hex)		Nokia Shanghai Bell Co., Ltd.
+286FB9     (base 16)		Nokia Shanghai Bell Co., Ltd.
+				No.388 Ning Qiao Road,Jin Qiao Pudong Shanghai
+				Shanghai     201206
+				CN
+
+08-EA-44   (hex)		Extreme Networks Headquarters
+08EA44     (base 16)		Extreme Networks Headquarters
+				2121 RDU Center Drive
+				Morrisville  NC  27560
+				US
+
+F4-EA-B5   (hex)		Extreme Networks Headquarters
+F4EAB5     (base 16)		Extreme Networks Headquarters
+				2121 RDU Center Drive
+				Morrisville  NC  27560
+				US

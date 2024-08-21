@@ -40,7 +40,7 @@ class MacLookup
         }
 
         if( !file_exists( self::$json_file ) ) {
-            self::update_Vendors();
+            self::update();
         }
 
         $vendors = self::load_JSON_Data();
@@ -59,7 +59,7 @@ class MacLookup
      *
      * @return void
      */
-    public static function update_Vendors() : void
+    public static function update() : void
     {
         $raw = self::download_Raw_Data();
         $array = self::parse_Raw_Vendor_List( raw: $raw );
@@ -209,9 +209,10 @@ class MacLookup
         $vendor = new stdClass();
         $rows = explode( separator: "\n", string: $raw);
         $first_row = array_shift( array: $rows );
-        list( $mac, $dnu, $vendor->organization ) = preg_split(
+        list( $mac, $dnu, $organization ) = preg_split(
             pattern: "#\s{2,}#", subject: $first_row
         );
+        $vendor->organization = trim( string: $organization );
         $vendor->mac = str_replace( search: '-', replace: ':', subject: $mac );
         $second_row = array_shift( array: $rows );
         list( $vendor->company_id, $dnu, $dnu ) = preg_split(
@@ -230,7 +231,7 @@ class MacLookup
     /**
      * Format the address of a vendor.
      *
-     * @param array $raw Raw vendor address text.
+     * @param array<string> $raw Raw vendor address text.
      * @return string Formatted address string.
      */
     public static function parse_Address( array $raw ) : string
@@ -244,7 +245,7 @@ class MacLookup
             }
         }
 
-        return $output;
+        return trim( string: $output );
     }
 
 
@@ -324,7 +325,7 @@ class MacLookup
     {
         $url = $url ?? self::$url;
 
-        return file_get_contents( filename: $url );
+        return (string)file_get_contents( filename: $url );
     }
 
 
@@ -342,7 +343,7 @@ class MacLookup
     {
         $path = $filepath ?? self::$raw_file;
 
-        return file_get_contents( filename: $path );
+        return (string)file_get_contents( filename: $path );
     }
 
 
@@ -385,7 +386,7 @@ class MacLookup
     ) : int|false
     {
         $path = $filepath ?? self::$json_file;
-        $json = json_encode( value: $data, flags: JSON_PRETTY_PRINT );
+        $json = json_encode( value: $data );
 
         return file_put_contents( filename: $path, data: $json );
     }
@@ -406,7 +407,7 @@ class MacLookup
         $path = $filepath ?? self::$json_file;
 
         return json_decode(
-            file_get_contents( filename: $path )
+            (string)file_get_contents( filename: $path )
         ) ?? [];
     }
 }

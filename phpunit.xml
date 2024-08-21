@@ -10,6 +10,7 @@
 
     <testsuites>
         <testsuite name="Main">
+            <file>tests/MacLookupTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
