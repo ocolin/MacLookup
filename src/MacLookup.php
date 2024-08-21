@@ -2,7 +2,7 @@
 
 declare( strict_types = 1 );
 
-namespace Ocolin\MacLookup;
+namespace Ocolin\Maclookup;
 
 use stdClass;
 

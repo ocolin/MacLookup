@@ -6,7 +6,7 @@ namespace Ocolin\Tests;
 
 require_once __DIR__ . '/../src/MacLookup.php';
 
-use Ocolin\MacLookup\MacLookup;
+use Ocolin\Maclookup\MacLookup;
 use PHPUnit\Framework\TestCase;
 
 final class MacLookupTest extends TestCase
