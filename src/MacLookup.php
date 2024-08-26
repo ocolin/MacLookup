@@ -104,7 +104,11 @@ class MacLookup
             }
         }
 
-        return new stdClass();
+        $empty = new stdClass();
+        $empty->organization = 'Not Found';
+        $empty->mac = $mac;
+
+        return $empty;
     }
 
 
