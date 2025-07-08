@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 
 namespace Ocolin\Maclookup;
 
+use Exception;
 use stdClass;
 
 
@@ -99,7 +100,7 @@ class MacLookup
     public static function find_Vendor( string $mac, array $vendors ) : object
     {
         foreach( $vendors as $vendor ) {
-            if( $mac == $vendor->mac ) {
+            if( $mac == $vendor->mac ) { // @phpstan-ignore property.notFound
                 return $vendor;
             }
         }
@@ -213,14 +214,14 @@ class MacLookup
         $vendor = new stdClass();
         $rows = explode( separator: "\n", string: $raw);
         $first_row = array_shift( array: $rows );
-        list( $mac, $dnu, $organization ) = preg_split(
+        list( $mac, $dnu, $organization ) = preg_split( // @phpstan-ignore offsetAccess.nonArray
             pattern: "#\s{2,}#", subject: $first_row
         );
         $vendor->organization = trim( string: $organization );
         $vendor->mac = str_replace( search: '-', replace: ':', subject: $mac );
         $second_row = array_shift( array: $rows );
-        list( $vendor->company_id, $dnu, $dnu ) = preg_split(
-            pattern: "#\s{2,}#", subject: $second_row
+        list( $vendor->company_id, $dnu, $dnu ) = preg_split( // @phpstan-ignore offsetAccess.nonArray
+            pattern: "#\s{2,}#", subject: (string)$second_row
         );
         $vendor->address = self::parse_Address( $rows );
 
@@ -405,13 +406,20 @@ class MacLookup
      *
      * @param ?string $filepath Optional file path to load.
      * @return array<object> Array of vendor objects.
+     * @throws Exception Trouble parsing JSON.
      */
     public static function load_JSON_Data( ?string $filepath = null ) : array
     {
         $path = $filepath ?? self::$json_file;
 
-        return json_decode(
+        $array = json_decode(
             (string)file_get_contents( filename: $path )
         ) ?? [];
+
+        if( gettype( $array ) !== 'array' ) {
+            throw new Exception( message: 'JSON data from file may be invalid.' );
+        }
+
+        return $array;
     }
 }
