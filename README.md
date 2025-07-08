@@ -6,21 +6,6 @@ A small tool for looking up the Vendor of a given MAC address.
 
 PHP 8.3
 
-# Adding as PHP Composer module
-
-Repository needs to be added to your composer.json in order to know where to download the library from.
-
-Add to composer.json:
-
-```
-"repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/ocolin/EasySNMP"
-    }
-],
-```
-
 # Usage
 
 Example code using the lookup function. 
