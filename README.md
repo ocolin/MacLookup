@@ -5,6 +5,8 @@ A small tool for looking up the Vendor of a given MAC address.
 # Requirements
 
 PHP 8.3
+If you want to update the vendor list, you will need the correct
+file permissions to write to the src directory.
 
 # Usage
 
@@ -12,7 +14,7 @@ Example code using the lookup function.
 
 ```
 $vendor_info = MacLookup::lookup( 
-    mac: '30:23:03:3A:F3:55' 
+    mac: '54:91:AF:B2:02:5B' 
 );
 ```
 
@@ -23,12 +25,10 @@ Example of the output of a MAC lookup query.
 ```
 stdClass Object
 (
-    [organization] => Belkin International Inc.
-    [mac] => 30:23:03
-    [company_id] => 302303
-    [address] => 12045 East Waterfront Drive
-Playa Vista  null  90094
-US
+    [registry] => MA-M
+    [assignment] => 5491AFB
+    [name] => Hyperconn Pte. ltd
+    [address] => 128 Tanjong Pagar Road Singapore(088535) Singapore  SG 088535 
 )
 ```
 
@@ -37,10 +37,7 @@ US
 This will download and parse a new vendor list from the IEEE website.
 
 ```
-MacLookup::update();
+$maclookup = new MacLookup();
+$macLookup->update();
 ```
 
-
-https://standards-oui.ieee.org/oui/oui.csv
-https://standards-oui.ieee.org/oui28/mam.csv
-https://standards-oui.ieee.org/oui36/oui36.csv

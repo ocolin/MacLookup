@@ -5,8 +5,6 @@ declare( strict_types = 1 );
 namespace Ocolin\Maclookup;
 
 use Exception;
-use stdClass;
-
 
 class MacLookup
 {
@@ -30,7 +28,8 @@ class MacLookup
      */
     private static string $vendor_file = __DIR__ . '/vendor.json';
 
-/*
+
+/* LOOK UP MAC ADDRESS
 ----------------------------------------------------------------------------- */
 
     /**
@@ -71,14 +70,16 @@ class MacLookup
 
 
 
-/*
+/* UPDATE VENDOR LIST
 ----------------------------------------------------------------------------- */
 
     /**
+     * Refresh list of vendors from IEEE.
+     *
      * @param string|null $file Path of an alternate storage file.
      * @return true|string Return true if successful, or error string if not.
      */
-    public function update_Vendors( ?string $file = null ) : true|string
+    public function update( ?string $file = null ) : true|string
     {
         $file = $file ?? self::$vendor_file;
 
@@ -107,14 +108,23 @@ class MacLookup
 
 
 
-/*
+/* FIND VENDOR
 ----------------------------------------------------------------------------- */
 
+    /**
+     * Search through list of vendors for a MAC address.
+     *
+     * @param string $mac Mac address to search for.
+     * @param array<object> $vendors List of vendors to search through.
+     * @return object|false Return the vendor or false if not found.
+     */
     public static function find_Vendor( string $mac, array $vendors ) : object|false
     {
         $mac = self::format_Raw_MAC( mac: self::format_Mac( mac: $mac ));
         foreach( $vendors as $vendor ) {
-            if( str_starts_with( haystack: $mac, needle: $vendor->assignment )) {
+            if(
+                str_starts_with( haystack: $mac, needle: $vendor->assignment ) // @phpstan-ignore property.notFound
+            ) {
                 return $vendor;
             }
         }
@@ -170,9 +180,7 @@ class MacLookup
      */
     public static function format_MAC( string $mac ) : string
     {
-        $mac = self::format_Pairs( mac: $mac );
-
-        return strtoupper( string: substr( string: $mac, offset: 0, length: 8 ));
+        return strtoupper( string: self::format_Pairs( mac: $mac ));
     }
 
 
@@ -203,10 +211,13 @@ class MacLookup
 
 
 
-/*
+/* LOAD VENDOR LIST FROM FILE
 ----------------------------------------------------------------------------- */
 
     /**
+     * The vendor list gets stored as a file so as to not have to download
+     * with every query.
+     *
      * @param string|null $file Optional vendor file.
      * @return array<object> List of vendors.
      */
@@ -224,27 +235,32 @@ class MacLookup
         return [];
     }
 
-/*
+
+
+/* DOWNLOAD ALL IEEE VENDOR LISTS
 ----------------------------------------------------------------------------- */
 
     /**
+     *  Get all 3 vendor lists (MA-S, MA-M, MA-L)
      * @return array<Row> List of IEEE vendors.
      */
     private function download_All() : array
     {
         return array_merge(
-            $this->download_CSV( url: self::$ma_l_url ),
-            $this->download_CSV( url: self::$ma_m_url ),
             $this->download_CSV( url: self::$ma_s_url ),
+            $this->download_CSV( url: self::$ma_m_url ),
+            $this->download_CSV( url: self::$ma_l_url )
         );
     }
 
 
 
-/*
+/* SAVE VENDOR LIST TO A JSON FILE
 ----------------------------------------------------------------------------- */
 
     /**
+     * Store the IEEE vendor lists to a JSON file.
+     *
      * @param array<Row> $data List of registry objects.
      * @param string|null $file Path of json file to store data in.
      * @return bool Whether save was successful or not.
@@ -259,7 +275,7 @@ class MacLookup
 
 
 
-/*
+/* DOWNLOAD A CSV FILE FROM REMOTE SITE
 ----------------------------------------------------------------------------- */
 
     /**
@@ -271,7 +287,7 @@ class MacLookup
         $output = [];
         if(( $handle = fopen( filename: $url, mode: 'r' )) !== FALSE ) {
             while(
-                ( $data = fgetcsv( stream: $handle, length: 1000 )) !== FALSE
+                ( $data = fgetcsv( stream: $handle, length: 1000, escape: '\\' )) !== FALSE
             ) {
                 if( $data[0] !== "Registry" ) {
                     $output[] = new Row(
