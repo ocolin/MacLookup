@@ -39,3 +39,8 @@ This will download and parse a new vendor list from the IEEE website.
 ```
 MacLookup::update();
 ```
+
+
+https://standards-oui.ieee.org/oui/oui.csv
+https://standards-oui.ieee.org/oui28/mam.csv
+https://standards-oui.ieee.org/oui36/oui36.csv

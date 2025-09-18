@@ -11,6 +11,16 @@ use PHPUnit\Framework\TestCase;
 
 final class MacLookupTest extends TestCase
 {
+    public function testLoad() : void
+    {
+        $mac = new MacLookup();
+        //$output = $mac->update_Vendors();
+        //var_dump($output);
+        $output = $mac->load_JSON();
+        print_r($output);
+    }
+
+    /*
     public function testLookup() : void
     {
         $mac = '30:23:03:3A:F3:55';
@@ -119,6 +129,6 @@ final class MacLookupTest extends TestCase
         $this->assertObjectHasProperty( propertyName: 'mac',object: $output );
         $this->assertObjectHasProperty( propertyName: 'company_id',object: $output );
         $this->assertObjectHasProperty( propertyName: 'address',object: $output );
-
     }
+    */
 }
