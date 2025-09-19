@@ -35,10 +35,10 @@ class MacLookup
     /**
      * @param string $mac MAC address to look up.
      * @param string|null $file Optional json file of vendors.
-     * @return object|false Vendor object, or false if not found.
+     * @return object Vendor object.
      * @throws Exception Throw error if mac address is invalid.
      */
-    public static function lookup( string $mac, ?string $file = null ) : object|false
+    public static function lookup( string $mac, ?string $file = null ) : object
     {
         # CHECK IF IT IS A PRIVATE ADDRESS
         if( self::is_Private( mac: $mac )) {
@@ -55,7 +55,7 @@ class MacLookup
 
         # GET VENDORS IF MISSING
         if( !file_exists( filename: $file )) {
-            $result = $o->update_Vendors( file: $file );
+            $result = $o->update( file: $file );
             if( gettype( $result ) === 'string' ) {
                 throw new Exception( $result );
             }
@@ -116,9 +116,9 @@ class MacLookup
      *
      * @param string $mac Mac address to search for.
      * @param array<object> $vendors List of vendors to search through.
-     * @return object|false Return the vendor or false if not found.
+     * @return object Return the vendor.
      */
-    public static function find_Vendor( string $mac, array $vendors ) : object|false
+    public static function find_Vendor( string $mac, array $vendors ) : object
     {
         $mac = self::format_Raw_MAC( mac: self::format_Mac( mac: $mac ));
         foreach( $vendors as $vendor ) {
@@ -129,7 +129,7 @@ class MacLookup
             }
         }
 
-        return false;
+        return self::not_Found();
     }
 
 
@@ -301,5 +301,19 @@ class MacLookup
         }
 
         return $output;
+    }
+
+
+/* NOT FOUND OBJECT
+----------------------------------------------------------------------------- */
+
+    private static function not_Found() : Row
+    {
+        return new Row(
+            registry: 'Not Found',
+            assignment: 'Not Found',
+            name: 'Not Found',
+            address: 'Not Found',
+        );
     }
 }
