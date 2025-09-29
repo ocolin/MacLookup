@@ -1,1 +1,1 @@
-{"version":2,"defects":{"Ocolin\\Tests\\MacLookupTest::testLoad":5},"times":{"Ocolin\\Tests\\MacLookupTest::testLoad":3.097}}
+{"version":2,"defects":{"Ocolin\\Tests\\MacLookupTest::testLoad":5,"Ocolin\\Tests\\MacLookupTest::testLookup":7},"times":{"Ocolin\\Tests\\MacLookupTest::testLoad":3.097,"Ocolin\\Tests\\MacLookupTest::testLookup":0.038}}

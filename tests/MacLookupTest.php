@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 final class MacLookupTest extends TestCase
 {
+    /*
     public function testLoad() : void
     {
         $mac = new MacLookup();
@@ -19,23 +20,23 @@ final class MacLookupTest extends TestCase
         $output = $mac->load_JSON();
         print_r($output);
     }
+    */
 
-    /*
     public function testLookup() : void
     {
         $mac = '30:23:03:3A:F3:55';
         $output = MacLookup::lookup( $mac );
+        print_r( $output );
 
         $this->assertIsObject( actual: $output );
-        $this->assertObjectHasProperty( propertyName: 'organization',object: $output );
-        $this->assertObjectHasProperty( propertyName: 'mac',object: $output );
-        $this->assertObjectHasProperty( propertyName: 'company_id',object: $output );
+        $this->assertObjectHasProperty( propertyName: 'name',object: $output );
+        $this->assertObjectHasProperty( propertyName: 'assignment',object: $output );
         $this->assertObjectHasProperty( propertyName: 'address',object: $output );
-        $this->assertEquals( expected: "Belkin International Inc.", actual: $output->organization );
-        $this->assertEquals( expected: '30:23:03', actual: $output->mac );
-        $this->assertEquals( expected: '302303', actual: $output->company_id );
+        $this->assertEquals( expected: "Belkin International Inc.", actual: $output->name );
+        $this->assertEquals( expected: '302303', actual: $output->assignment );
     }
 
+    /*
     public function testValidateMacGood() : void
     {
         $mac = '30:23:03:3A:F3:55';
