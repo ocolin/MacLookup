@@ -147,7 +147,7 @@ class MacLookup
     public static function is_Private( string $mac ) : bool
     {
         $private = [ '2', '6', 'A', 'E' ];
-        $check_char = substr( string: $mac, offset: 0, length: 1 );
+        $check_char = substr( string: $mac, offset: 1, length: 1 );
 
         return in_array( needle: $check_char, haystack: $private );
     }
