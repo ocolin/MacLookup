@@ -10,7 +10,7 @@
     "autoload": {
         "psr-4": {
             "Ocolin\\Maclookup\\": "src/",
-            "Tests\\": "tests/"
+            "Ocolin\\MacLookup\\Tests\\": "tests/"
         }
     },
     "authors": [

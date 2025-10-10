@@ -2,7 +2,7 @@
 
 declare( strict_types = 1 );
 
-namespace Ocolin\Tests;
+namespace Ocolin\MacLookup\Tests;
 
 require_once __DIR__ . '/../src/MacLookup.php';
 
@@ -11,22 +11,11 @@ use PHPUnit\Framework\TestCase;
 
 final class MacLookupTest extends TestCase
 {
-    /*
-    public function testLoad() : void
-    {
-        $mac = new MacLookup();
-        //$output = $mac->update_Vendors();
-        //var_dump($output);
-        $output = $mac->load_JSON();
-        print_r($output);
-    }
-    */
 
     public function testLookup() : void
     {
         $mac = '30:23:03:3A:F3:55';
         $output = MacLookup::lookup( $mac );
-        print_r( $output );
 
         $this->assertIsObject( actual: $output );
         $this->assertObjectHasProperty( propertyName: 'name',object: $output );
@@ -36,24 +25,7 @@ final class MacLookupTest extends TestCase
         $this->assertEquals( expected: '302303', actual: $output->assignment );
     }
 
-    /*
-    public function testValidateMacGood() : void
-    {
-        $mac = '30:23:03:3A:F3:55';
-        $output = MacLookup::validate_MAC( mac: $mac );
 
-        $this->assertIsBool( actual: $output );
-        $this->assertTrue( condition: $output );
-    }
-
-    public function testValidateMacBad() : void
-    {
-        $mac = '30:23:03:3A:F3';
-        $output = MacLookup::validate_MAC( mac: $mac );
-
-        $this->assertIsBool( actual: $output );
-        $this->assertFalse( condition: $output );
-    }
 
     public function testFormatMac() : void
     {
@@ -61,7 +33,7 @@ final class MacLookupTest extends TestCase
         $output = MacLookup::format_MAC( $mac );
 
         $this->assertIsString( actual: $output );
-        $this->assertEquals( expected: '30:F3:03', actual: $output );
+        $this->assertEquals( expected: '30:F3:03:3A:F3:01', actual: $output );
     }
 
     public function testFormatPairsGood() : void
@@ -100,36 +72,4 @@ final class MacLookupTest extends TestCase
         $this->assertFalse( condition: $output );
     }
 
-    public function testParseRawVendorList() : void
-    {
-        $raw = file_get_contents( filename: __DIR__ . '/vendorsRaw.txt' );
-        $output = MacLookup::parse_raw_vendor_list( raw: $raw );
-
-        $this->assertIsArray( actual: $output );
-        $this->assertIsObject( actual: $output[0] );
-    }
-
-    public function testSplitRawVendorList() : void
-    {
-        $raw = file_get_contents( filename: __DIR__ . '/vendorsRaw.txt' );
-        $output = MacLookup::split_Raw_Vendor_List( raw: $raw );
-
-        $this->assertIsArray( actual: $output );
-        $this->assertIsString( actual: $output[0] );
-    }
-
-
-    public function testParseRawVendor() : void
-    {
-        $raw = file_get_contents( filename: __DIR__ . '/vendorsRaw.txt' );
-        $vendors = MacLookup::split_Raw_Vendor_List( raw: $raw );
-        $output = MacLookup::parse_Raw_Vendor( raw: $vendors[1] );
-
-        $this->assertIsObject( actual: $output );
-        $this->assertObjectHasProperty( propertyName: 'organization',object: $output );
-        $this->assertObjectHasProperty( propertyName: 'mac',object: $output );
-        $this->assertObjectHasProperty( propertyName: 'company_id',object: $output );
-        $this->assertObjectHasProperty( propertyName: 'address',object: $output );
-    }
-    */
 }

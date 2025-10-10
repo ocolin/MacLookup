@@ -35,10 +35,10 @@ class MacLookup
     /**
      * @param string $mac MAC address to look up.
      * @param string|null $file Optional json file of vendors.
-     * @return object Vendor object.
+     * @return Row Vendor object.
      * @throws Exception Throw error if mac address is invalid.
      */
-    public static function lookup( string $mac, ?string $file = null ) : object
+    public static function lookup( string $mac, ?string $file = null ) : Row
     {
         # CHECK IF IT IS A PRIVATE ADDRESS
         if( self::is_Private( mac: $mac )) {
@@ -116,16 +116,21 @@ class MacLookup
      *
      * @param string $mac Mac address to search for.
      * @param array<object> $vendors List of vendors to search through.
-     * @return object Return the vendor.
+     * @return Row Return the vendor.
      */
-    public static function find_Vendor( string $mac, array $vendors ) : object
+    public static function find_Vendor( string $mac, array $vendors ) : Row
     {
         $mac = self::format_Raw_MAC( mac: self::format_Mac( mac: $mac ));
         foreach( $vendors as $vendor ) {
             if(
                 str_starts_with( haystack: $mac, needle: $vendor->assignment ) // @phpstan-ignore property.notFound
             ) {
-                return $vendor;
+                return new Row(
+                    registry: $vendor->registry,
+                  assignment: $vendor->assignment,
+                        name: $vendor->name,
+                     address: $vendor->address
+                );
             }
         }
 
