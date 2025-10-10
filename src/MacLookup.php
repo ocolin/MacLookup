@@ -126,10 +126,10 @@ class MacLookup
                 str_starts_with( haystack: $mac, needle: $vendor->assignment ) // @phpstan-ignore property.notFound
             ) {
                 return new Row(
-                    registry: $vendor->registry,
-                  assignment: $vendor->assignment,
-                        name: $vendor->name,
-                     address: $vendor->address
+                    registry: $vendor->registry,  // @phpstan-ignore property.notFound
+                  assignment: $vendor->assignment,// @phpstan-ignore property.notFound
+                        name: $vendor->name,      // @phpstan-ignore property.notFound
+                     address: $vendor->address    // @phpstan-ignore property.notFound
                 );
             }
         }
@@ -151,6 +151,8 @@ class MacLookup
      */
     public static function is_Private( string $mac ) : bool
     {
+
+        $mac = self::format_MAC( mac: $mac );
         $private = [ '2', '6', 'A', 'E' ];
         $check_char = substr( string: $mac, offset: 1, length: 1 );
 
@@ -202,6 +204,7 @@ class MacLookup
      */
     public static function format_Pairs( string $mac ) : string
     {
+        $mac = trim( string: $mac );
         if( strlen( string: $mac ) === 17 ) { return $mac; }
 
         $pairs = explode( separator: ':', string: $mac );
