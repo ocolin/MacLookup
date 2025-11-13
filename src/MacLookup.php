@@ -312,16 +312,17 @@ class MacLookup
     }
 
 
+
 /* NOT FOUND OBJECT
 ----------------------------------------------------------------------------- */
 
     private static function not_Found() : Row
     {
         return new Row(
-            registry: 'Not Found',
+              registry: 'Not Found',
             assignment: 'Not Found',
-            name: 'Not Found',
-            address: 'Not Found',
+                  name: 'Not Found',
+               address: 'Not Found',
         );
     }
 }
