@@ -232,6 +232,7 @@ class MacLookup
     public function load_JSON( ?string $file = null ) : array
     {
         $file = $file ?? self::$vendor_file;
+        set_time_limit( seconds: 300 );
 
         if(( $text = file_get_contents( $file )) !== false ) {
             $json = json_decode( json: $text );
