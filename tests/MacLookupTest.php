@@ -25,6 +25,29 @@ final class MacLookupTest extends TestCase
         $this->assertEquals( expected: '302303', actual: $output->assignment );
     }
 
+    public function testLookupPrivate() : void
+    {
+        $mac = '32:23:03:3A:F3:55';
+        $output = MacLookup::lookup( $mac );
+
+        $this->assertIsObject( actual: $output );
+        $this->assertObjectHasProperty( propertyName: 'name',object: $output );
+        $this->assertObjectHasProperty( propertyName: 'assignment',object: $output );
+        $this->assertObjectHasProperty( propertyName: 'address',object: $output );
+        $this->assertEquals( expected: "Private", actual: $output->name );
+    }
+
+    public function testLookupNotFound() : void
+    {
+        $mac = '15:00:00:00:00:00';
+        $output = MacLookup::lookup( $mac );
+        $this->assertIsObject( actual: $output );
+        $this->assertObjectHasProperty( propertyName: 'name',object: $output );
+        $this->assertObjectHasProperty( propertyName: 'assignment',object: $output );
+        $this->assertObjectHasProperty( propertyName: 'address',object: $output );
+        $this->assertEquals( expected: "Not Found", actual: $output->name );
+    }
+
 
 
     public function testFormatMac() : void

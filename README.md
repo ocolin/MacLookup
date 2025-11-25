@@ -6,8 +6,7 @@ A small tool for looking up the Vendor of a given MAC address.
 
 PHP 8.3
 
-If you want to update the vendor list, you will need the correct
-file permissions to write to the src directory. Will try to think of a better solution, but it won't need to be updated often.
+If you want to update the vendor list, you will need the correct file permissions to write to the src directory. Will try to think of a better solution, but it won't need to be updated often.
 
 # Usage
 
@@ -24,7 +23,7 @@ $vendor_info = MacLookup::lookup(
 Example of the output of a MAC lookup query.
 
 ```
-stdClass Object
+Ocolin\MacLookup\Row Object
 (
     [registry] => MA-M
     [assignment] => 5491AFB
@@ -35,10 +34,9 @@ stdClass Object
 
 ## Updating Vendor list
 
-This will download and parse a new vendor list from the IEEE website. For this to work you will need ownership permissions to write to the folder. This may not be feasible for all situation.s
+This will download and parse a new vendor list from the IEEE website. For this to work you will need ownership permissions to write to the folder. This may not be feasible for all situations.
 
 ```php
-$maclookup = new MacLookup();
-$macLookup->update();
+MacLookup::update();
 ```
 

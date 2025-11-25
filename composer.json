@@ -9,7 +9,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Ocolin\\Maclookup\\": "src/",
+            "Ocolin\\MacLookup\\": "src/",
             "Ocolin\\MacLookup\\Tests\\": "tests/"
         }
     },
