@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * VendorTrait.php
+ *
+ * Trait contains the functions related to working with
+ * the list of MAC vendors.
+ *
+ * @package Ocolin/MacLookup
+ * @author Colin Miller <ocolin@staff.cruzio.com>
+ */
+
 declare( strict_types = 1 );
 
 namespace Ocolin\MacLookup;
@@ -36,22 +46,17 @@ trait VendorTrait
 ----------------------------------------------------------------------------- */
 
     /**
-     * @return void
-     * @throws Exception Trouble writing to file. Many may not have permission
-     * to write back into vendors directory. But option remains for those who
-     * do have write access. Not intended for everyday use.
+     * @return bool True for success, false for failure.
      */
-    public static function update() : void
+    public static function update() : bool
     {
-        if( self::init_Vendor_File() === false ) {
-            throw new Exception(
-                message: 'Error writing to vendor file, check permissions.'
-            );
-        }
+        if( self::init_Vendor_File() === false ) { return false; }
 
-        self::write_Block( block: self::OUI36 );
-        self::write_Block( block: self::OUI28 );
-        self::write_Block( block: self::OUI );
+        if( self::write_Block( block: self::OUI36 ) === false ) { return false; }
+        if( self::write_Block( block: self::OUI28 ) === false ) { return false; }
+        if( self::write_Block( block: self::OUI )   === false ) { return false; }
+
+        return true;
     }
 
 
@@ -61,9 +66,9 @@ trait VendorTrait
 
     /**
      * @param string $block Name of address block to save.
-     * @return void
+     * @return bool
      */
-    public static function write_Block( string $block ) : void
+    public static function write_Block( string $block ) : bool
     {
         foreach( self::download_Vendors( url: $block ) AS $line )
         {
@@ -75,13 +80,15 @@ trait VendorTrait
                        address: (string)$line[3],
                 );
 
-                file_put_contents(
+                if( file_put_contents(
                     filename: self::VENDOR_FILE,
                         data: json_encode( value: $object ) . "\n",
                        flags: FILE_APPEND
-                );
+                ) === false ) {  return false; }
             }
         }
+
+        return true;
     }
 
 
@@ -105,7 +112,7 @@ trait VendorTrait
                 )) !== FALSE
             ) { yield $data; }
 
-            fclose( $handle );
+            fclose( stream: $handle );
         }
     }
 

@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * MacTrait.php
+ *
+ * Trait contains the functions related to working with
+ * MAC address functionality.
+ *
+ * @package Ocolin/MacLookup
+ * @author Colin Miller <ocolin@staff.cruzio.com>
+ */
+
 declare( strict_types = 1 );
 
 namespace Ocolin\MacLookup;
