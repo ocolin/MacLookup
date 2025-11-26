@@ -14,7 +14,6 @@ declare( strict_types = 1 );
 
 namespace Ocolin\MacLookup;
 
-use Exception;
 use Generator;
 
 trait VendorTrait
