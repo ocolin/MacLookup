@@ -3,6 +3,7 @@
     "description": "Basic tool to look up vendor of a MAC address",
     "type": "library",
     "require-dev": {
+        "php": "^8.2",
         "phpunit/phpunit": "^12.3",
         "phpstan/phpstan": "^2.1"
     },
@@ -16,7 +17,7 @@
     "authors": [
         {
             "name": "Colin Miller",
-            "email": "ocolin@cruzio.com"
+            "email": "ocolin@staff.cruzio.com"
         }
     ],
     "require": {}

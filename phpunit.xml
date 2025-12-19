@@ -6,11 +6,14 @@
         beStrictAboutChangesToGlobalState="true"
         cacheDirectory=".phpunit.cache"
         displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
+        displayDetailsOnPhpunitDeprecations="true"
 >
 
     <testsuites>
         <testsuite name="Main">
-            <file>tests/MacLookupTest.php</file>
+<!--            <file>tests/MacLookupTest.php</file>-->
+            <file>tests/MacMemTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
