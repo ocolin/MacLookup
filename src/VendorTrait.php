@@ -1,13 +1,12 @@
 <?php
 
 /**
- * VendorTrait.php
+ * MacLookup: A simple tool to lookup MAC vendor from a MAC addres.
  *
- * Trait contains the functions related to working with
- * the list of MAC vendors.
- *
- * @package Ocolin/MacLookup
- * @author Colin Miller <ocolin@staff.cruzio.com>
+ * @author  Colin Miller <ocolin@staff.cruzio.com>
+ * @copyright Copyright(c) 2025 Colin Miller
+ * @license MIT (opensource.org)
+ * @version 3.0
  */
 
 declare( strict_types = 1 );
@@ -18,7 +17,6 @@ use Generator;
 
 trait VendorTrait
 {
-
 
 /* LOAD VENDORS FROM FILE
 ----------------------------------------------------------------------------- */

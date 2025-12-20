@@ -20,5 +20,7 @@
             "email": "ocolin@staff.cruzio.com"
         }
     ],
-    "require": {}
+    "require": {
+      "ext-pdo": "*"
+    }
 }

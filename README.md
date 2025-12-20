@@ -1,42 +1,108 @@
-# MacLookup
+# Mac Lookup
 
-A small tool for looking up the Vendor of a given MAC address. 
+This was an experimental project to look for different ways to look up MAC address vendors for other tools. Now that some people are using it I will try to be mindful of not breaking it while experimenting. 
 
-# Requirements
+Currently trying 3 methods to see which works best and will likely end up with options to use any of them. The methods I am trying are:
 
-PHP 8.3
+- Streaming the vendor content from a text file for low memory usage.
+- Loading all vendor content into memory to increase speed up lookups.
+- Loading from a database to see how it compares memory and speed wise.
 
-If you want to update the vendor list, you will need the correct file permissions to write to the src directory. Will try to think of a better solution, but it won't need to be updated often.
+!!! Version 4 will not be compatible with this one. !!!
 
-# Usage
-
-Example code using the lookup function. 
+Example results:
 
 ```php
-$vendor_info = MacLookup::lookup( 
-    mac: '54:91:AF:B2:02:5B' 
-);
+FILE LOOKUP
+Memory used: 0.03 MB
+Time: 0.0022971153259277
+
+MEMORY LOOKUP
+Memory used: 17.67 MB
+Time: 0.0010538339614868
+
+DB LOOKUP
+Memory used: 0.02 MB
+Time: 0.00094333489735921
 ```
 
-## Output Example
+To not interfere with the first implementation which is streaming from file I have made two new classes for the other methods. I will likely make a version 4 which will incorporate them all into one call since that will not be compatible with this current setup.
 
-Example of the output of a MAC lookup query.
+## Installation
+
+```php
+composer require ocolin/maclookup
+```
+
+## Requirements
+
+PDO - Which should come built in to PHP.
+PHP 8.2 or higher. 
+
+## Instantiation
+
+Using the MacLookup class does not need instantiation and is a completely static. However the memory and DB classes need instantiation for efficiency.
+
+### Example
+
+```php
+$lookup = Ocolin\MacLookup\MacMem();
+```
+
+```php
+$lookup = Ocolin\MacLookup\MacDB();
+```
+
+These will load what is needed and download the vendor content if missing and before being used.
+
+## Models
+
+### DB version MacDB
+
+```php
+$maclookup = Ocolin\MacLookup\MacDB();
+$vendor = $lookup->lookup( mac: '54:91:AF:B2:02:3A' );
+```
+
+Example output:
 
 ```
 Ocolin\MacLookup\Row Object
 (
-    [registry] => MA-M
-    [assignment] => 5491AFB
-    [name] => Hyperconn Pte. ltd
-    [address] => 128 Tanjong Pagar Road Singapore(088535) Singapore  SG 088535 
+    [registry] => MA-L
+    [assignment] => 302303
+    [name] => Belkin International Inc.
+    [address] => 12045 East Waterfront Drive Playa Vista null US 90094 
 )
 ```
 
-## Updating Vendor list
-
-This will download and parse a new vendor list from the IEEE website. For this to work you will need ownership permissions to write to the folder. This may not be feasible for all situations.
+### Memory version MacMem
 
 ```php
-MacLookup::update();
+$maclookup = Ocolin\MacLookup\MacMem();
+$vendor = $lookup->lookup( mac: '54:91:AF:B2:02:3A' );
 ```
 
+### File version MacLookup
+
+```php
+$vendor = MacLookup::lookup( mac: '54:91:AF:B2:02:3A' );
+```
+
+## Updating vendor list. 
+
+All three versions have an update() function. However the DB version needs to be instantiated to use the database.
+
+Example:
+
+```php
+// FILE
+$status = Ocolin\MacLookup\MacLookup::update();
+
+// MEMORY
+$status = Ocolin\MacLookup\MacMem::update();
+
+// DB
+$maclookup = Ocolin\MacLookup\MacDB();
+$status = Ocolin\MacLookup\MacDB->update();
+```

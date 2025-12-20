@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * MacLookup: A simple tool to lookup MAC vendor from a MAC addres.
+ *
+ * @author  Colin Miller <ocolin@staff.cruzio.com>
+ * @copyright Copyright(c) 2025 Colin Miller
+ * @license MIT (opensource.org)
+ * @version 3.0
+ */
+
 declare( strict_types = 1 );
 
 namespace Ocolin\MacLookup;
@@ -45,16 +54,19 @@ class MacMem
 ----------------------------------------------------------------------------- */
 
     /**
+     * @param int $timeout Batch processing could take more time than
+     * PHP INI default.
      * @throws FileLoadException Unable to load vendors file.
      * @throws JsonParseException Unable to parse vendors file.
      * @throws FileDownloadException Unable to download vendors data.
      */
-    public function __construct()
+    public function __construct( int $timeout = 300 )
     {
+        set_time_limit( seconds: $timeout );
         if(
             !file_exists( filename: self::VENDOR_FILE ) OR
                 filesize( filename: self::VENDOR_FILE ) == 0
-        ) { self::update_Vendors(); }
+        ) { self::update(); }
 
         $this->vendors = self::load_Vendors();
     }
@@ -100,10 +112,35 @@ class MacMem
 
 
 
+/* UPDATE VENDOR DATA
+----------------------------------------------------------------------------- */
+
+    /**
+     * @return bool If update was successful or not.
+     * @throws FileDownloadException|JsonParseException
+     */
+    public static function update() : bool
+    {
+        $vendors = json_encode( value: self::download_Vendors());
+        if( $vendors === false ) {
+            throw new JsonParseException(
+                message: 'Unable to parse vendors from IEEE.'
+            );
+        }
+
+        return (bool)file_put_contents(
+            filename: self::VENDOR_FILE, data: $vendors
+        );
+    }
+
+
+
 /* LOAD VENDOR LIST
 ----------------------------------------------------------------------------- */
 
     /**
+     * Load vendors into memory.
+     *
      * @return Row[] List of MAC vendors.
      * @throws JsonParseException Unable to read vendor file.
      * @throws FileLoadException Unable to load vendors file.
@@ -138,28 +175,6 @@ class MacMem
 ----------------------------------------------------------------------------- */
 
     /**
-     * @return bool If update was successful or not.
-     * @throws FileDownloadException|JsonParseException
-     */
-    public static function update_Vendors() : bool
-    {
-        $vendors = json_encode( value: self::download_Vendors());
-        if( $vendors === false ) {
-            throw new JsonParseException(
-                message: 'Unable to parse vendors from IEEE.'
-            );
-        }
-
-        return (bool)file_put_contents(
-            filename: self::VENDOR_FILE, data: $vendors
-        );
-    }
-
-
-/*
------------------------------------------------------------------------------ */
-
-    /**
      * @return Row[] List of vendor rows.
      * @throws FileDownloadException Unable to download file(s) from IEEE.
      */
@@ -179,7 +194,7 @@ class MacMem
 
     /**
      * @param string $uri URI of CSV file at IEEE
-     * @return Row[]
+     * @return Row[] List of vendor rows.
      * @throws FileDownloadException Unable to load file.
      */
     public static function download_Vendor_File( string $uri ) : array

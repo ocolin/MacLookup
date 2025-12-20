@@ -1,14 +1,12 @@
 <?php
 
 /**
- * MacLookup.php
+ * MacLookup: A simple tool to lookup MAC vendor from a MAC addres.
  *
- * Tool for looking up MAC address vendors from a MAC address.
- * Downloads and stores vendor block lists from IEEE for lookups.
- *
- * @package Ocolin/MacLookup
- * @author Colin Miller <ocolin@staff.cruzio.com>
- * @see https://standards-oui.ieee.org/
+ * @author  Colin Miller <ocolin@staff.cruzio.com>
+ * @copyright Copyright(c) 2025 Colin Miller
+ * @license MIT (opensource.org)
+ * @version 3.0
  */
 
 declare( strict_types = 1 );
@@ -16,6 +14,8 @@ declare( strict_types = 1 );
 namespace Ocolin\MacLookup;
 
 use Exception;
+
+set_time_limit( seconds: 300 );
 
 class MacLookup
 {

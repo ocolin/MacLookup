@@ -12,8 +12,9 @@
 
     <testsuites>
         <testsuite name="Main">
-<!--            <file>tests/MacLookupTest.php</file>-->
+            <file>tests/MacLookupTest.php</file>
             <file>tests/MacMemTest.php</file>
+            <file>tests/MacDbTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

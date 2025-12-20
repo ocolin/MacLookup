@@ -5,21 +5,17 @@ declare( strict_types = 1 );
 namespace Ocolin\MacLookup\Tests;
 
 use Ocolin\MacLookup\Exceptions\FileDownloadException;
-use Ocolin\MacLookup\Exceptions\FileLoadException;
-use Ocolin\MacLookup\Exceptions\JsonParseException;
-use Ocolin\MacLookup\MacMem;
+use Ocolin\MacLookup\MacDB;
 use PHPUnit\Framework\TestCase;
 
-class MacMemTest extends TestCase
+class MacDbTest extends TestCase
 {
-    public static MacMem $mac;
+    public static MacDB $mac;
 
-    /**
-     * @throws FileDownloadException
-     */
+
     public function testDownloadVendor() : void
     {
-        $output = MacMem::download_Vendor_File( uri: MacMem::OUI36 );
+        $output = MacDB::download_Vendor_File( uri: MacDB::OUI36 );
         TestCase::assertNotEmpty( $output );
         //print_r( $output );
     }
@@ -27,45 +23,21 @@ class MacMemTest extends TestCase
 
     /**
      * @throws FileDownloadException
-     */
-    public function testDownloadVendors() : void
-    {
-        $output = MacMem::download_Vendors();
-        //print_r( $output );
-        TestCase::assertNotEmpty( $output );
-    }
-
-
-    /**
-     * @throws FileDownloadException
-     * @throws JsonParseException
      */
     public function testUpdateVendors() : void
     {
-        $output = MacMem::update();
+        $output = self::$mac->update_Vendors();
+        var_dump( $output );
         TestCase::assertTrue( $output );
-    }
-
-
-    /**
-     * @throws FileLoadException
-     * @throws JsonParseException
-     */
-    public function testLoadVendors() : void
-    {
-        $output = MacMem::load_Vendors();
-        //print_r( $output );
-        TestCase::assertNotEmpty( $output );
     }
 
 
     public function testLookupGood() : void
     {
         $output = self::$mac->lookup( mac: '30:23:03:3A:F3:55' );
-        //print_r( $output );
+        //var_dump( $output );
         TestCase::assertEquals( '302303', $output->assignment );
     }
-
 
     public function testLookupPrivate() : void
     {
@@ -91,9 +63,17 @@ class MacMemTest extends TestCase
     }
 
 
-    public static function setUpBeforeClass(): void
+    public function testDbSearch() : void
     {
-        self::$mac = new MacMem();
+        $output = self::$mac->search_DB( mac: '3023033AF355' );
+        //print_r($output);
+        TestCase::assertIsObject( $output );
+        TestCase::assertEquals( '302303', $output->assignment );
     }
 
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$mac = new MacDB();
+    }
 }
