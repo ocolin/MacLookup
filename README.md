@@ -103,6 +103,5 @@ $status = Ocolin\MacLookup\MacLookup::update();
 $status = Ocolin\MacLookup\MacMem::update();
 
 // DB
-$maclookup = Ocolin\MacLookup\MacDB();
-$status = Ocolin\MacLookup\MacDB->update();
+$status = Ocolin\MacLookup::update();
 ```
