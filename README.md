@@ -41,9 +41,18 @@ This version is not compatible with previous versions. The reason for this is th
 
 ---
 
+## Requirements
+
+- PHP ^8.2
+- SQLite extension (for some functions)
+
+---
+
 ## Installation
 
-composer ocolin/mac-lookup
+```
+composer require ocolin/mac-lookup
+```
 
 ---
 
