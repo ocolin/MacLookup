@@ -1,0 +1,59 @@
+#!/usr/bin/env php
+<?php
+
+declare( strict_types = 1 );
+
+require __DIR__ . '/../vendor/autoload.php';
+
+// TODO: CLean this up.
+
+use Ocolin\MacLookup\Mac;
+
+$mac = $argv[1] ?? '54:91:AF:B2:02:3A';
+if( !Mac::isValid( $mac ) || Mac::isPrivate( $mac )) {
+    echo "Invalid or private MAC provided, using default.\n";
+    $mac = '54:91:AF:B2:02:3A';
+}
+
+
+$file = shell_exec( 'php bin/benchmark-driver file ' . $mac );
+$lines = explode( "\n", trim( $file ));
+$file_time   = $lines[0];
+$file_memory = $lines[1];
+
+$memory = shell_exec( 'php bin/benchmark-driver memory ' . $mac );
+$lines = explode( "\n", trim( $memory ));
+$memory_time   = $lines[0];
+$memory_memory = $lines[1];
+
+$db = shell_exec( 'php bin/benchmark-driver database ' . $mac );
+$lines = explode( "\n", trim( $db ));
+$db_time   = $lines[0];
+$db_memory = $lines[1];
+
+
+
+$output = <<<BENCHMARK
+================================
+  MacLookup Benchmark Results
+================================
+
+MAC Address: {$mac}
+
+FILE DRIVER
+    Memory : {$file_memory} MB
+    Time   : {$file_time} ms
+
+MEMORY DRIVER
+    Memory : {$memory_memory} MB
+    Time   : {$memory_time} ms
+
+DATABASE DRIVER
+    Memory : {$db_memory} MB
+    Time   : {$db_time} ms
+================================
+
+BENCHMARK;
+
+echo $output;
+

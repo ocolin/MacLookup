@@ -6,15 +6,34 @@
         beStrictAboutChangesToGlobalState="true"
         cacheDirectory=".phpunit.cache"
         displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
         displayDetailsOnTestsThatTriggerDeprecations="true"
-        displayDetailsOnPhpunitDeprecations="true"
 >
-
     <testsuites>
-        <testsuite name="Main">
-            <file>tests/MacLookupTest.php</file>
-            <file>tests/MacMemTest.php</file>
-            <file>tests/MacDbTest.php</file>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
+
+    <groups>
+        <exclude>
+            <group>integration</group>
+        </exclude>
+    </groups>
+
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+
+    <coverage>
+        <report>
+            <html outputDirectory="coverage"/>
+            <text outputFile="php://stdout" showOnlySummary="true"/>
+        </report>
+    </coverage>
 </phpunit>

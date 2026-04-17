@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+// TODO: Clean this up.
+
+declare( strict_types = 1 );
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Ocolin\MacLookup\MacLookup;
+
+$driver = $argv[1] ?? 'file';
+$mac    = $argv[2] ?? '54:91:AF:B2:02:3A';
+
+if( !in_array( $driver, ['file', 'memory', 'database'])) { $driver = 'file'; }
+
+$temp_dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'benchmarks';
+if( !is_dir( $temp_dir)) { mkdir( directory: $temp_dir, recursive: true ); }
+
+$Driver = MacLookup::$driver( $temp_dir );
+
+$start = microtime( as_float: true );
+$Driver->lookup( mac: $mac );
+$end = microtime( as_float: true );
+
+$time  = $end - $start;
+$memory = memory_get_peak_usage( real_usage: true );
+
+
+echo sprintf( '%.10f',$time * 1000 ) . "\n";
+echo round( $memory / 1048576, 2 ) . "\n";
+

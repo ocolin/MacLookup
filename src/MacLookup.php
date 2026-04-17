@@ -1,95 +1,107 @@
 <?php
 
-/**
- * MacLookup: A simple tool to lookup MAC vendor from a MAC addres.
- *
- * @author  Colin Miller <ocolin@staff.cruzio.com>
- * @copyright Copyright(c) 2025 Colin Miller
- * @license MIT (opensource.org)
- * @version 3.0
- */
-
 declare( strict_types = 1 );
 
 namespace Ocolin\MacLookup;
 
-use Exception;
-
-set_time_limit( seconds: 300 );
-
-class MacLookup
+final class MacLookup
 {
-    /**
-     * IEEE standards website URL.
-     */
-    private const string IEEE = 'https://standards-oui.ieee.org/';
 
-    /**
-     * MAC Address Block Large (MA-L)
-     */
-    private const string OUI = 'oui/oui.csv';
-
-    /**
-     * MAC Address Block Medium (MA-M)
-     */
-    private const string OUI28 = 'oui28/mam.csv';
-
-    /**
-     * MAC Address Block Small (MA-S)
-     */
-    public const string OUI36 = 'oui36/oui36.csv';
-
-    /**
-     * Name of file to store vendors content.
-     */
-    public const string VENDOR_FILE =  __DIR__ . '/' . 'vendors';
-
-    use VendorTrait;
-    use MacTrait;
-
-
-/* LOOKUP MAC ADDRESS
+/* FILE BASED LOOKUP
 ----------------------------------------------------------------------------- */
 
     /**
-     * @param string $mac
-     * @return Row
-     * @throws Exception
+     * The file based driver stores the IEEE data in a file and queries
+     * that file for vendors. This option uses the least memory, but is
+     * the slowest.
+     *
+     * @param string $path Optional path for data storage.
+     * @param bool $autoUpdate Opt to not update storage when missing.
+     * @return FileDriver
      */
-    public static function lookup( string $mac ) : Row
+    public static function file(
+        string $path = '',
+          bool $autoUpdate = true
+    ) : FileDriver
     {
-        $mac = self::format_Raw_MAC( mac: self::format_Mac( mac: $mac ));
+        $path = self::resolvePath( path: $path );
 
-        # CHECK IF IT IS A PRIVATE ADDRESS
-        if( self::is_Private( mac: $mac )) {
-            return new Row(
-                  registry: 'Private',
-                assignment: strtoupper( string: $mac ),
-                      name: 'Private',
-                   address: 'Private',
-            );
+        return new FileDriver( dataPath: $path, autoUpdate: $autoUpdate );
+    }
+
+
+
+/* MEMORY BASED LOOKUP
+----------------------------------------------------------------------------- */
+
+    /**
+     * This driver stores the IEEE data in a file, but loads the complete
+     * library into memory. This is faster than file based, but uses a lot
+     * more memory.
+     *
+     * @param string $path Optional path for data storage.
+     * @param bool $autoUpdate Opt to not update storage when missing.
+     * @return MemoryDriver
+     */
+    public static function memory(
+        string $path = '',
+          bool $autoUpdate = true
+    ) : MemoryDriver
+    {
+        $path = self::resolvePath( path: $path );
+
+        return new MemoryDriver( dataPath: $path, autoUpdate: $autoUpdate );
+    }
+
+
+
+/* DATABASE BASED LOOKUP
+----------------------------------------------------------------------------- */
+
+    /**
+     * The database driver stores the IEEE data in a database. This driver
+     * gets both speed and low memory usage, but requires that users have
+     * the SQLite drivers installed to use. See composer.json suggest.
+     *
+     * @param string $path Optional path for data storage.
+     * @param bool $autoUpdate Opt to not update storage when missing.
+     * @return DatabaseDriver
+     */
+    public static function database(
+        string $path = '',
+          bool $autoUpdate = true
+    ) : DatabaseDriver
+    {
+        $path = self::resolvePath( path: $path );
+
+        return new DatabaseDriver( dataPath: $path, autoUpdate: $autoUpdate );
+    }
+
+
+
+/* RESOLVE STORAGE PATH DIRECTORY
+----------------------------------------------------------------------------- */
+
+    /**
+     * @param string $path Optional path for data storage.
+     * @return string Path that data will be stored under.
+     */
+    private static function resolvePath( string $path = '' ): string
+    {
+        if( $path !== '' ) { return $path; }
+
+        $cwd = getcwd();
+        if( $cwd !== false ) {
+            return $cwd . DIRECTORY_SEPARATOR . '.maclookup';
         }
 
-        if( !file_exists( filename: self::VENDOR_FILE )) {
-            self::update();
-        }
+        trigger_error(
+            message: 'MacLookup: Could not determine working directory, ' .
+            'falling back to temp directory. Pass a dataPath to avoid ' .
+            're-downloading on system restart.',
+            error_level: E_USER_WARNING
+        );
 
-        foreach( self::load_Vendors() as $vendor )
-        {
-            if(
-                is_object( value: $vendor ) AND
-                isset( $vendor->assignment ) AND
-                str_starts_with( haystack: $mac, needle: $vendor->assignment )
-            ) {
-                return new Row(
-                      registry: $vendor->registry ?? '',
-                    assignment: $vendor->assignment,
-                          name: $vendor->name ?? '',
-                       address: $vendor->address ?? '',
-                );
-            }
-        }
-
-        return self::not_Found();
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'maclookup';
     }
 }

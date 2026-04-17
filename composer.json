@@ -1,16 +1,37 @@
 {
     "name": "ocolin/maclookup",
-    "description": "Basic tool to look up vendor of a MAC address",
+    "description": "MAC address vendor lookup with file, memory, and database drivers",
+    "homepage": "https://github.com/ocolin/MacLookup",
     "type": "library",
-    "require-dev": {
+    "keywords": [
+        "mac",
+        "mac-address",
+        "vendor",
+        "oui",
+        "ieee",
+        "network",
+        "lookup"
+    ],
+    "require": {
+        "ext-pdo": "*",
         "php": "^8.2",
-        "phpunit/phpunit": "^12.3",
+        "ext-ctype": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.0",
         "phpstan/phpstan": "^2.1"
+    },
+    "suggest": {
+        "ext-pdo_sqlite": "Required for DatabaseDriver"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Ocolin\\MacLookup\\": "src/",
+            "Ocolin\\MacLookup\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Ocolin\\MacLookup\\Tests\\": "tests/"
         }
     },
@@ -20,7 +41,13 @@
             "email": "ocolin@staff.cruzio.com"
         }
     ],
-    "require": {
-      "ext-pdo": "*"
-    }
+    "scripts": {
+        "test": "vendor/bin/phpunit --no-coverage --display-deprecations --display-notices",
+        "debug": "vendor/bin/phpunit --no-coverage --display-deprecations --display-notices --debug",
+        "integration": "vendor/bin/phpunit --no-coverage --group integration",
+        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage"
+    },
+    "bin": [
+        "bin/benchmark"
+    ]
 }
