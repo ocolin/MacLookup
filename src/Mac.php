@@ -11,6 +11,8 @@ final class Mac
 ----------------------------------------------------------------------------- */
 
     /**
+     * Format MAC address.
+     *
      * @param string $mac Original MAC address.
      * @return string Colon formatted MAC address. Returns original MAC if
      * it is not valid. MAC should be checked for invalid first.
@@ -30,6 +32,8 @@ final class Mac
 ----------------------------------------------------------------------------- */
 
     /**
+     * Check if a MAC address is private.
+     *
      * @param string $mac Original MAC address.
      * @return bool If MAC address is private.
      */
@@ -37,10 +41,11 @@ final class Mac
     {
         $mac = self::clean( mac: $mac );
         if( strlen( $mac ) < 2 ) { return false; }
-        $char = $mac[1];
 
-        return in_array( needle: $char, haystack: ['2', '6', 'A', 'E'] );
+        return ( hexdec( $mac[1] ) & 0x2 ) === 0x2;
     }
+
+
 
 
 
@@ -48,6 +53,8 @@ final class Mac
 ----------------------------------------------------------------------------- */
 
     /**
+     * Check if MAC address is valid.
+     *
      * @param string $mac Original MAC address.
      * @return bool If MAC address is a valid address.
      */
@@ -64,6 +71,8 @@ final class Mac
 ----------------------------------------------------------------------------- */
 
     /**
+     * Strip characters from MAC address.
+     *
      * @param string $mac Original MAC address.
      * @return string MAC address stripped of separators.
      */
@@ -78,6 +87,8 @@ final class Mac
 ----------------------------------------------------------------------------- */
 
     /**
+     * Convert MAC to plain hex.
+     *
      * @param string $mac Original MAC address.
      * @return string Cleaned MAC address.
      */
