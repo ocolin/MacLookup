@@ -86,7 +86,7 @@ class MacTest extends TestCase
         $this->assertFalse( $output );
     }
 
-    public function test_isValid_Amost_valid() : void
+    public function test_isValid_Almost_valid() : void
     {
         $output = Mac::isValid( mac: '54:91:AF:B2:02:3G' );
         $this->assertFalse( $output );
@@ -116,6 +116,18 @@ class MacTest extends TestCase
     public function test_isPrivate_E() : void
     {
         $output = Mac::isPrivate( mac: '5E:91:AF:B2:2:3A' );
+        $this->assertTrue( $output );
+    }
+
+    public function test_isPrivate_3() : void
+    {
+        $output = Mac::isPrivate( mac: '53:91:AF:B2:2:3A' );
+        $this->assertTrue( $output );
+    }
+
+    public function test_isPrivate_7() : void
+    {
+        $output = Mac::isPrivate( mac: '57:91:AF:B2:2:3A' );
         $this->assertTrue( $output );
     }
 
