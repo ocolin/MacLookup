@@ -1,3 +1,7 @@
+![Packagist Version](https://img.shields.io/packagist/v/ocolin/maclookup)
+![PHP Version](https://img.shields.io/packagist/dependency-v/ocolin/maclookup/php)
+![License](https://img.shields.io/packagist/l/ocolin/maclookup)
+![Downloads](https://img.shields.io/packagist/dt/ocolin/maclookup)
 # MacLookup
 
 ## Table of Contents
